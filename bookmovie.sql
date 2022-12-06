@@ -80,7 +80,7 @@ CREATE TABLE payment(
     FOREIGN KEY(m_id) REFERENCES movie(m_id) ON DELETE CASCADE
 );
 
-insert into customer values
+INSERT INTO customer VALUES
 ('C01','Manoj','9980714815','manoj@gmail.com','manoj#123'),
 ('C02','Ankur','9965717815','ankur@gmail.com','ankur#123'),
 ('C03','Shreya','8880714815','shreya@gmail.com','shreya#123'),
@@ -97,21 +97,21 @@ insert into customer values
 ('C14','Pranav','7780174822','pranav@gmail.com','pranav#123'),
 ('C15','Shweta','7764714825','manoj@gmail.com','manoj#123');
 
-insert into multiplex values
+INSERT INTO multiplex VALUES
 ('MP01','PVR','Ajay Bijli','Shantiniketan road','Bangalore'),
 ('MP02','INOX','Pavan Jain','Bangalore highway','Mysore'),
 ('MP03','Big Cinemas','Reliance Group','Balthakre road','Mumbai'),
 ('MP04','Cinépolis','Organización R','Balthakre road','Mumbai'),
 ('MP05','IMAX Multiplex','A R Prasad','Kukatpally abades road','Hyderabad');
 
-insert into admins values
+INSERT INTO admins VALUES
 ('riteshbmda1','riteshbmda@123','MP01'),  
 ('rahulbmda3','rahulbmda2@123','MP02'),
 ('shyambmdb2','shyambmdb2@123','MP03'),
 ('riyabmdc1','riyabmdc1@123','MP04'),
 ('niharikabmdc3','niharikabmdc3@123','MP05');
 
-insert into screen values
+INSERT INTO screen VALUES
 ('SC01','M1S1G1','Gold','MP01'),
 ('SC01','M1S1G2','Gold','MP01'),
 ('SC01','M1S1G3','Gold','MP01'),
@@ -158,7 +158,7 @@ insert into screen values
 ('SC03','M5S3G2','Gold','MP05'),
 ('SC03','M5S3G3','Gold','MP05');
 
-insert into ticket values
+INSERT INTO ticket VALUES
 ('T01','SH01','SC01','R1','2022-12-10 12:00:00','245','pid01'),
 ('T02','SH01','SC01','G2','2022-12-10 12:00:00','245','pid02'),
 ('T03','SH01','SC01','C3','2022-12-10 12:00:00','245','pid03'),
@@ -170,7 +170,7 @@ insert into ticket values
 ('T09','SH02','SC01','R3','2022-12-10 17:00:00','245','pid09'),
 ('T10','SH01','SC01','C1','2022-12-10 12:00:00','245','pid10');
 
-insert into books values
+INSERT INTO books VALUES
 ('C01',20221209,'T01'),
 ('C02',20221210,'T02'),
 ('C03',20221209,'T03'),
@@ -182,14 +182,14 @@ insert into books values
 ('C09',20221209,'T09'),
 ('C10',20221209,'T10');
 
-insert into movie values
+INSERT INTO movie VALUES
 ('M01','SHM01','Kantara','hours 45 minutes','Rishab Shetty','Rishab Shetty, Sapthami Gowda','Drama/Thriller',20220930),
 ('M02','SHM02','Avatar 2','3 hour','David Miller','John, Elizabeth','Sci-fi/Action',20221230),
 ('M03','SHM03','Goodbye','2 hours 45 minutes','Vikas Bahi','Amitabh Bachan, Rashmika Mandanna','Comedy/Drama',20221007),
 ('M04','SHM04','Godfather','2 hours 37 minutes','Mohan Raja','Chiranjeevi, Tanya Ravichandran, Nayanthara','Action',20220930),
 ('M05','SHM05','Liger','2 hours 20 minutes','Puri Jagannadh','Vijay Devarakonda, Ananya Pandey','Action/Romance',20220930);
 
-insert into payment values
+INSERT INTO payment VALUES
 ('pid01','M01','250','UPI','9 am'),
 ('pid02','M01','250','UPI','8:45 am'),
 ('pid03','M03','350','Debit card','9 am'),
@@ -201,7 +201,7 @@ insert into payment values
 ('pid09','M04','330','UPI','11:45 am'),
 ('pid10','M02','320','Debit card','8:29 am');
 
-insert into shows values
+INSERT INTO shows VALUES
 ('SHM01','M01','SC01','12:00:00','14:45:00','Kannada'),
 ('SHM02','M01','SC02','12:00:00','14:45:00','Hindi'),
 ('SHM03','M02','SC01','12:00:00','14:45:00','English'),
@@ -212,7 +212,58 @@ insert into shows values
 ('SHM08','M05','SC01','12:00:00','14:45:00','Telugu'),
 ('SHM09','M05','SC02','12:00:00','14:45:00','Hindi');
 
+# Simple queries
+SELECT * FROM multiplex;
+INSERT INTO customer VALUES('C16','Rohan','7604920201','rohan@gmail.com','rohan#123');
+ALTER TABLE customer MODIFY COLUMN mobile_no varchar(10);
+SELECT m_name,director FROM movie;
+SELECT * FROM multiplex WHERE city='Mysore';
+DELETE FROM customer WHERE c_id='C15';
 
+# Nested queries
+SELECT show_id FROM ticket WHERE price=(SELECT MIN(price) FROM ticket);
+SELECT ticket_no,show_id FROM ticket WHERE payment_id=(SELECT payment_id FROM payment WHERE payment_time="10 am");
+SELECT ticket_no,show_id,seat_id FROM ticket WHERE payment_id IN (SELECT payment_id FROM payment WHERE payment_type="Debit card");
+SELECT booking_date FROM books WHERE c_id=(SELECT c_id FROM customer WHERE c_name='Ankur');
+SELECT c_id,booking_date FROM books WHERE ticket_no IN (SELECT ticket_no FROM ticket);
+
+#Set commands
+
+#UNION command
+SELECT mp_id FROM multiplex UNION SELECT mp_id FROM screen;
+SELECT m_id FROM movie UNION SELECT m_id FROM shows;
+
+#UNION ALL command
+SELECT m_id FROM movie UNION ALL SELECT m_id FROM shows;
+SELECT m_id,show_id FROM movie UNION ALL SELECT m_id,show_id FROM shows;
+
+#INTERSECT command
+SELECT price FROM ticket INTERSECT SELECT price FROM payment; 
+SELECT show_id FROM shows INTERSECT SELECT show_id FROM movie;
+
+#EXCEPT command
+SELECT show_id FROM shows EXCEPT SELECT show_id FROM movie;
+SELECT mp_id FROM multiplex EXCEPT SELECT mp_id FROM screen;
+
+#GROUP BY command
+SELECT COUNT(screen_id),mp_id FROM screen GROUP BY mp_id;
+SELECT COUNT(screen_id),m_id FROM shows GROUP BY m_id;
+SELECT COUNT(mp_id),city FROM multiplex GROUP BY city;
+SELECT COUNT(mp_id),city FROM multiplex GROUP BY city ORDER BY COUNT(mp_id) DESC;
+
+#HAVING command
+SELECT COUNT(screen_id),show_id FROM ticket GROUP BY show_id HAVING COUNT(screen_id) > 2;
+SELECT COUNT(price),m_id FROM payment GROUP BY m_id HAVING COUNT(price) >= 2 ORDER BY m_id DESC;
+
+#BETWEEN command
+SELECT * FROM movie WHERE m_name BETWEEN "Avatar 2" AND "Godfather";
+SELECT payment_id,m_id FROM payment WHERE price BETWEEN 200 and 300;
+SELECT mp_name, mp_owner, city FROM multiplex WHERE mp_id BETWEEN "MP02" AND "MP06" ORDER BY mp_owner;
+
+#LIKE command
+SELECT c_name FROM customer WHERE c_name LIKE '%a';
+SELECT c_name FROM customer where c_name LIKE '%an%';
+SELECT c_id,c_name FROM customer WHERE c_name LIKE '__r%';
 
 
 
