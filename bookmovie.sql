@@ -1,5 +1,6 @@
-CREATE DATABASE sampledb;
-USE sampledb;
+CREATE DATABASE book_movie_db;
+
+USE book_movie_db;
 
 CREATE TABLE customer(
     c_id VARCHAR(15) PRIMARY KEY NOT NULL,
