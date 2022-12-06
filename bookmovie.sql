@@ -2,15 +2,15 @@ CREATE DATABASE sampledb;
 USE sampledb;
 
 CREATE TABLE customer(
-	c_id VARCHAR(15) PRIMARY KEY NOT NULL,
-	c_name VARCHAR(50) DEFAULT NULL,
-	mobile_no VARCHAR(15) UNIQUE NOT NULL,
-	email_id VARCHAR(50) NOT NULL,
-	c_password VARCHAR(50) NOT NULL
+    c_id VARCHAR(15) PRIMARY KEY NOT NULL,
+    c_name VARCHAR(50) DEFAULT NULL,
+    mobile_no VARCHAR(15) UNIQUE NOT NULL, 
+    email_id VARCHAR(50) NOT NULL,
+    c_password VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE multiplex(
-	mp_id VARCHAR(15) PRIMARY KEY NOT NULL,
+    mp_id VARCHAR(15) PRIMARY KEY NOT NULL,
     mp_name VARCHAR(50) DEFAULT NULL,
     mp_owner VARCHAR(15) NOT NULL,
     street VARCHAR(100) NOT NULL,
@@ -18,22 +18,22 @@ CREATE TABLE multiplex(
 );
 
 CREATE TABLE screen(
-	screen_id VARCHAR(15) NOT NULL,
-	seat_id VARCHAR(15) PRIMARY KEY NOT NULL,
-	seat_type VARCHAR(15) NOT NULL,
+    screen_id VARCHAR(15) NOT NULL,
+    seat_id VARCHAR(15) PRIMARY KEY NOT NULL,
+    seat_type VARCHAR(15) NOT NULL,
     mp_id VARCHAR(15) NOT NULL,
     FOREIGN KEY(mp_id) REFERENCES multiplex(mp_id) 
 );        
 
 CREATE TABLE admins(
-	admin_id VARCHAR(15) PRIMARY KEY NOT NULL,
+    admin_id VARCHAR(15) PRIMARY KEY NOT NULL,
     admin_password VARCHAR(50) NOT NULL,
     mp_id VARCHAR(15) NOT NULL,
     FOREIGN KEY(mp_id) REFERENCES multiplex(mp_id) 
 );
 
 CREATE TABLE movie(
-	m_id VARCHAR(15) PRIMARY KEY NOT NULL,
+    m_id VARCHAR(15) PRIMARY KEY NOT NULL,
     show_id VARCHAR(15) NOT NULL,
     m_name VARCHAR(50) NOT NULL,
     duration VARCHAR(20) NOT NULL,
@@ -44,17 +44,17 @@ CREATE TABLE movie(
 );
 
 CREATE TABLE shows(
-	show_id VARCHAR(15) PRIMARY KEY NOT NULL,
+    show_id VARCHAR(15) PRIMARY KEY NOT NULL,
     m_id VARCHAR(15) NOT NULL,
-	screen_id VARCHAR(15) NOT NULL,
-	start_time TIME,
-	end_time TIME,
-	show_language char(100),
+    screen_id VARCHAR(15) NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    show_language char(100),
     FOREIGN KEY(m_id) REFERENCES movie(m_id) 
 ); 
 
 CREATE TABLE ticket(
-	ticket_no VARCHAR(15) PRIMARY KEY NOT NULL,
+    ticket_no VARCHAR(15) PRIMARY KEY NOT NULL,
     show_id VARCHAR(15) NOT NULL,
     screen_id VARCHAR(15) NOT NULL,
     seat_id VARCHAR(15) NOT NULL,
@@ -64,20 +64,20 @@ CREATE TABLE ticket(
 );
 
 CREATE TABLE books(
-		c_id VARCHAR(15) NOT NULL,
-        booking_date DATE NOT NULL,
-        ticket_no VARCHAR(15) NOT NULL,
-        FOREIGN KEY(c_id) REFERENCES customer(c_id),
-        FOREIGN KEY(ticket_no) REFERENCES ticket(ticket_no)
+    c_id VARCHAR(15) NOT NULL,
+    booking_date DATE NOT NULL,
+    ticket_no VARCHAR(15) NOT NULL,
+    FOREIGN KEY(c_id) REFERENCES customer(c_id),
+    FOREIGN KEY(ticket_no) REFERENCES ticket(ticket_no)
 );   
 
 CREATE TABLE payment(
-	payment_id VARCHAR(15) PRIMARY KEY NOT NULL,
-	m_id VARCHAR(15) NOT NULL,
-	price INT NOT NULL,
-	payment_type VARCHAR(50),
-	payment_time VARCHAR(50) NOT NULL,
-	FOREIGN KEY(m_id) REFERENCES movie(m_id) ON DELETE CASCADE
+    payment_id VARCHAR(15) PRIMARY KEY NOT NULL,
+    m_id VARCHAR(15) NOT NULL,
+    price INT NOT NULL,
+    payment_type VARCHAR(50),
+    payment_time VARCHAR(50) NOT NULL,
+    FOREIGN KEY(m_id) REFERENCES movie(m_id) ON DELETE CASCADE
 );
 
 insert into customer values
